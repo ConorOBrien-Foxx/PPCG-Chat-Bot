@@ -3,7 +3,7 @@
 // @namespace    http://your.homepage/
 // @version      0.1
 // @description  enter something useful
-// @author       You
+// @author       Conor O'Brien and Quartata
 // @match        http://chat.stackexchange.com/rooms/30332/beep-boop-maggot
 // @grant        none
 // ==/UserScript==
@@ -27,24 +27,30 @@ loadScript("http://mathjs.org/js/lib/math.js",function(){
           precision: 64        // Number of significant digits for BigNumbers
         });
 });
+
+function parseHTML(html){
+    var temp = document.createElement("div");
+    temp.innerHTML = html;
+    return temp.innerHTML;
+}
  
 function obtainLastMessage(){
-        message  = $("div.monologue:last .content");
-        messages = [];
-        for(var i=0;i<message.length;i++){
-                messages.push(message[i].innerHTML)
-        }
-        username = $("div.monologue:last .username")[0].innerHTML;
-        return [username,"said",messages,$("div.monologue:last")]
+    message  = $("div.monologue:last .content");
+    messages = [];
+    for(var i=0;i<message.length;i++){
+        messages.push(parseHTML(message[i].innerHTML));
+    }
+    username = $("div.monologue:last .username")[0].innerHTML;
+    return [username,"said",messages,$("div.monologue:last")];
 }
  
 function send(msg,v){
-        v = v || "<The Tin Soldier> ";
-        t=document.createElement("textarea");
-        t.innerHTML = msg;
-        msg=t.value;
-        $("#input")[0].value = v+msg;
-        $("#sayit-button").click();
+    v = v || "<The Tin Soldier> ";
+    t=document.createElement("textarea");
+    t.innerHTML = msg;
+    msg=t.value;
+    $("#input")[0].value = v+msg;
+    $("#sayit-button").click();
 }
  
 function getCommand(x,a,b){
@@ -54,39 +60,39 @@ function getCommand(x,a,b){
    }
 }
  
-mscope = {"alex":0.5,"geobits":"i","conor":true};
+mscope = {"alex":0.5,"geobits":"i","conor":true,"pau":1.5*Math.PI,"Phi":(Math.sqrt(5)-1),"tanmath":Math.tan(30),"starman":7,"quartata":true};
  
 commands = {
-        say: function(a,b){
-                send(a,b);
-        },
-        time: function(a,b){
-                send(new Date +"",b);
-        },
-        eval: function(a,b){
-                try {
-                        xp=math.eval(a,mscope);
-                        send("`"+a+" => "+xp+"`",b);                   
-                } catch(e){
-                        send(e,b)
-                }
-        },
-        scope: function(a,b){
-                a=a.split(" ");
-                mscope[a[0]] = a[1];
-        },
-        alex: function(a,b){
-        send("["+String.fromCharCode(2063)+"](http://@AlexA.)"+String.fromCharCode(3232)+"_"+String.fromCharCode(3232),b);
-        },
-        help: function(a,b){
-                send("Commands: "+Object.keys(commands).join("; ")+"\nNo docs yet.",b);
-        },
-        status: function(a,b){
-                send("I am "+_name+" and have "+_status+" minute"+(status[1]==1?"":"s")+" left to live.");
-        },
-        stab: function(a,b){
-                send("I am a soldier, maggot! Do you think that will hurt ME?!")
-        },
+    say: function(a,b){
+            send(a,b);
+    },
+    time: function(a,b){
+            send(new Date +"",b);
+    },
+    eval: function(a,b){
+            try {
+                    xp=math.eval(a,mscope);
+                    send("`"+a+" => "+xp+"`",b);                   
+            } catch(e){
+                    send(e,b)
+            }
+    },
+    scope: function(a,b){
+            a=a.split(" ");
+            mscope[a[0]] = a[1];
+    },
+    alex: function(a,b){
+    send("["+String.fromCharCode(2063)+"](http://@AlexA.)"+String.fromCharCode(3232)+"_"+String.fromCharCode(3232),b);
+    },
+    help: function(a,b){
+            send("Commands: "+Object.keys(commands).join("; ")+"\nNo docs yet.",b);
+    },
+    status: function(a,b){
+            send("I am "+_name+" and have "+_status+" minute"+(status[1]==1?"":"s")+" left to live.");
+    },
+    stab: function(a,b){
+            send("I am a soldier, maggot! Do you think that will hurt ME?!")
+    },
     doorknob: function(a,b) {
         send("'OH GODS NO!! You can't leave us here with Doorknob! It'll be nethack everywhere!' -Geobits");
     },
@@ -102,7 +108,9 @@ commands = {
     }
 }
  
- 
+function quitBot(reason){
+    send(reason||"Bot terminated.");
+}
  
 commands[String.fromCharCode(3232)+"_"+String.fromCharCode(3232)] = function(a,b){
         send("AlexA.",b);
