@@ -8,6 +8,8 @@
 // @grant        none
 // ==/UserScript==
 
+trusted_users = ["<The Tin Soldier> @quartata ","<The Tin Soldier> @CᴏɴᴏʀO'Bʀɪᴇɴ "];
+
 function loadScript(url,callback){
     var head = document.getElementsByTagName('head')[0];
     var script = document.createElement('script');
@@ -46,7 +48,7 @@ function send(msg,v){
 }
  
 function getCommand(x,a,b){
-   if(commands[x] && (Math.floor(new Date()/1000)-commandTimeout >= 10)) {
+   if(commands[x] && (Math.floor(new Date()/1000)-commandTimeout >= 20 || trusted_users.indexOf(b) > -1)) {
      commands[x](a,b);
      commandTimeout = Math.floor(new Date()/1000);
    }
@@ -74,7 +76,7 @@ commands = {
                 mscope[a[0]] = a[1];
         },
         alex: function(a,b){
-        send(String.fromCharCode(3232)+"_"+String.fromCharCode(3232),b+" ["+String.fromCharCode(2063)+"](http://@AlexA.)");
+        send("["+String.fromCharCode(2063)+"](http://@AlexA.)"+String.fromCharCode(3232)+"_"+String.fromCharCode(3232),b);
         },
         help: function(a,b){
                 send("Commands: "+Object.keys(commands).join("; ")+"\nNo docs yet.",b);
@@ -87,6 +89,16 @@ commands = {
         },
     doorknob: function(a,b) {
         send("'OH GODS NO!! You can't leave us here with Doorknob! It'll be nethack everywhere!' -Geobits");
+    },
+    punishment: function(a,b) {
+        send("@TanMath You are but a grease stain on the wheel of time compared to @quartata.");
+    },
+    cure: function(a,b) {
+        if(trusted_users.indexOf(b) > -1){
+        console.log(b);
+        _status = Infinity;
+        _name = "healthy";
+        }
     }
 }
  
