@@ -60,7 +60,7 @@ function getCommand(x,a,b){
    }
 }
  
-mscope = {"alex":0.5,"geobits":"i","conor":true,"pau":1.5*Math.PI,"Phi":(Math.sqrt(5)-1),"tanmath":Math.tan(30),"starman":7,"quartata":true};
+mscope = {"alex":0.5,"wrong":0.5,"geobits":"i","conor":true,"pau":1.5*Math.PI,"Phi":(Math.sqrt(5)-1),"tanmath":Math.tan(30),"starman":7,"quartata":true};
  
 commands = {
     say: function(a,b){
@@ -71,7 +71,7 @@ commands = {
     },
     eval: function(a,b){
             try {
-                    xp=math.eval(a,mscope);
+                    xp=math.eval(a.replace(/is/g,"=="),mscope);
                     send("`"+a+" => "+xp+"`",b);                   
             } catch(e){
                     send(e,b)
